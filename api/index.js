@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 
 const BASIC = "/api?url=";
 
@@ -8,60 +8,86 @@ export default async function handler(req, res) {
   // ================= HOME =================
   if (!url) {
     return res.send(`<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>WGs+</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{
-  margin:0;
-  background:black;
-  color:#00ff9c;
-  font-family:monospace;
-  overflow:hidden;
+body {
+  margin: 0;
+  background: black;
+  color: #00ff9c;
+  font-family: monospace;
+  overflow: hidden;
 }
-canvas{position:fixed;inset:0;z-index:-1}
-.center{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+
+canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
 }
-h1{font-size:80px;margin-bottom:20px}
-.controls{
-  display:flex;
-  gap:10px;
-  margin-bottom:15px;
+
+.center {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-select,input,button{
-  padding:14px 20px;
-  border-radius:25px;
-  border:1px solid #00ff9c;
-  background:#050505;
-  color:#00ff9c;
-  font-size:15px;
+
+h1 {
+  font-size: 80px;
+  margin-bottom: 20px;
 }
-input{width:460px}
-button{
-  background:#00ff9c;
-  color:#000;
-  cursor:pointer;
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 }
-#icon-row{
-  margin-top:35px;
-  display:flex;
-  gap:40px;
+
+select,
+input,
+button {
+  padding: 14px 20px;
+  border-radius: 25px;
+  border: 1px solid #00ff9c;
+  background: #050505;
+  color: #00ff9c;
+  font-size: 15px;
 }
-.icon-item{
-  width:64px;height:64px;
-  transition:.2s;
+
+input {
+  width: 460px;
 }
-.icon-item:hover{transform:scale(1.15)}
-.icon-item img{
-  width:100%;height:100%;
-  filter:drop-shadow(0 0 8px rgba(0,255,156,.6));
+
+button {
+  background: #00ff9c;
+  color: #000;
+  cursor: pointer;
+}
+
+#icon-row {
+  margin-top: 35px;
+  display: flex;
+  gap: 40px;
+}
+
+.icon-item {
+  width: 64px;
+  height: 64px;
+  transition: .2s;
+}
+
+.icon-item:hover {
+  transform: scale(1.15);
+}
+
+.icon-item img {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 156, .6));
 }
 </style>
 </head>
@@ -80,7 +106,7 @@ button{
       <option value="cors1">Public Proxy (corsproxy.io)</option>
       <option value="cors2">Public Proxy (allorigins)</option>
     </select>
-    <input id="u" placeholder="enter site (roblox.com)">
+    <input id="u" placeholder="Enter site (roblox.com)">
     <button onclick="go()">GO</button>
   </div>
 
@@ -102,22 +128,12 @@ function buildURL(raw){
   if(!raw.startsWith('http')) raw='https://'+raw;
   const engine = document.getElementById("engine").value;
 
-  if(engine === 'basic')
-    return \`\${BASIC}\${encodeURIComponent(raw)}\`;
+  if(engine === 'basic') return \`\${BASIC}\${encodeURIComponent(raw)}\`;
 
-  // PUBLIC ULTRAVIOLET
-  if(engine === 'uv1')
-    return 'https://uv.run/service/' + btoa(raw);
-
-  if(engine === 'uv2')
-    return 'https://ultraviolet.workers.dev/service/' + btoa(raw);
-
-  // PUBLIC BARE‑STYLE PROXIES
-  if(engine === 'cors1')
-    return 'https://corsproxy.io/?' + encodeURIComponent(raw);
-
-  if(engine === 'cors2')
-    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(raw);
+  if(engine === 'uv1') return 'https://uv.run/service/' + btoa(raw);
+  if(engine === 'uv2') return 'https://ultraviolet.workers.dev/service/' + btoa(raw);
+  if(engine === 'cors1') return 'https://corsproxy.io/?' + encodeURIComponent(raw);
+  if(engine === 'cors2') return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(raw);
 }
 
 function go(){
@@ -132,12 +148,12 @@ function openApp(url){
 
 document.getElementById("u").onkeydown = e => e.key === 'Enter' && go();
 
-// particles
+// Particles effect
 const c = document.getElementById("bg");
 const ctx = c.getContext('2d');
 let W, H, P;
 
-function r(){
+function resize(){
   W = c.width = window.innerWidth;
   H = c.height = window.innerHeight;
   P = [...Array(90)].map(() => ({
@@ -148,10 +164,11 @@ function r(){
     r: Math.random() * 2
   }));
 }
-window.onresize = r;
-r();
 
-(function a(){
+window.onresize = resize;
+resize();
+
+(function animate(){
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = '#00ff9c';
   P.forEach(o => {
@@ -163,7 +180,7 @@ r();
     ctx.arc(o.x, o.y, o.r, 0, 7);
     ctx.fill();
   });
-  requestAnimationFrame(a);
+  requestAnimationFrame(animate);
 })();
 </script>
 </body>
