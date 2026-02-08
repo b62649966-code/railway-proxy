@@ -1,12 +1,15 @@
 {
   "name": "vercel-proxy",
   "version": "1.0.0",
-  "type": "module",
+  "type": "module", 
   "scripts": {
-    "start": "node api/index.js"
+    "start": "next start" 
   },
   "dependencies": {
-    "node-fetch": "^3.3.1"
+    "node-fetch": "^3.3.1",  // This is the fetch library used to make requests
+    "next": "12.0.0",         // This is the Next.js version for your project
+    "react": "17.0.0",        // React is required by Next.js
+    "react-dom": "17.0.0"     // React DOM is required by Next.js
   },
   "engines": {
     "node": ">=18"
