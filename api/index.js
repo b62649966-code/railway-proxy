@@ -10,46 +10,22 @@ export default async function handler(req, res) {
     return res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>
-<title>WGs+</title>
+<title>WGs+ Basic Proxy</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 body {
   margin: 0;
   background: black;
   color: #00ff9c;
   font-family: monospace;
-  overflow: hidden;
-}
-
-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-}
-
-.center {
-  height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  text-align: center;
 }
 
-h1 {
-  font-size: 80px;
-  margin-bottom: 20px;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-select,
-input,
-button {
+input, button {
   padding: 14px 20px;
   border-radius: 25px;
   border: 1px solid #00ff9c;
@@ -67,122 +43,30 @@ button {
   color: #000;
   cursor: pointer;
 }
-
-#icon-row {
-  margin-top: 35px;
-  display: flex;
-  gap: 40px;
-}
-
-.icon-item {
-  width: 64px;
-  height: 64px;
-  transition: .2s;
-}
-
-.icon-item:hover {
-  transform: scale(1.15);
-}
-
-.icon-item img {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0 8px rgba(0, 255, 156, .6));
-}
 </style>
 </head>
 
 <body>
-<canvas id="bg"></canvas>
-
-<div class="center">
-  <h1>WGs+</h1>
-
-  <div class="controls">
-    <select id="engine">
-      <option value="basic">Basic Proxy</option>
-      <option value="uv1">Ultraviolet (uv.run)</option>
-      <option value="uv2">Ultraviolet (workers.dev)</option>
-      <option value="cors1">Public Proxy (corsproxy.io)</option>
-      <option value="cors2">Public Proxy (allorigins)</option>
-    </select>
+  <div>
+    <h1>WGs+ Basic Proxy</h1>
     <input id="u" placeholder="Enter site (roblox.com)">
     <button onclick="go()">GO</button>
   </div>
 
-  <div id="icon-row">
-    <a class="icon-item" onclick="openApp('https://www.roblox.com')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Roblox_Logo.svg">
-    </a>
-    <a class="icon-item" onclick="openApp('https://www.examplemovie.com')">
-      <img src="https://cdn-icons-png.flaticon.com/512/2503/2503508.png">
-    </a>
-    <a class="icon-item" onclick="openApp('https://linear-maroon-lpc9bycpg2.edgeone.app/')">
-      <img src="https://cdn-icons-png.flaticon.com/512/686/686589.png">
-    </a>
-  </div>
-</div>
+  <script>
+  function buildURL(raw){
+    if(!raw.startsWith('http')) raw='https://'+raw;
+    return \`\${BASIC}\${encodeURIComponent(raw)}\`;
+  }
 
-<script>
-function buildURL(raw){
-  if(!raw.startsWith('http')) raw='https://'+raw;
-  const engine = document.getElementById("engine").value;
+  function go(){
+    const u = document.getElementById("u");
+    if(!u.value.trim()) return;
+    location.href = buildURL(u.value.trim());
+  }
 
-  if(engine === 'basic') return \`\${BASIC}\${encodeURIComponent(raw)}\`;
-
-  if(engine === 'uv1') return 'https://uv.run/service/' + btoa(raw);
-  if(engine === 'uv2') return 'https://ultraviolet.workers.dev/service/' + btoa(raw);
-  if(engine === 'cors1') return 'https://corsproxy.io/?' + encodeURIComponent(raw);
-  if(engine === 'cors2') return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(raw);
-}
-
-function go(){
-  const u = document.getElementById("u");
-  if(!u.value.trim()) return;
-  location.href = buildURL(u.value.trim());
-}
-
-function openApp(url){
-  location.href = buildURL(url);
-}
-
-document.getElementById("u").onkeydown = e => e.key === 'Enter' && go();
-
-// Particles effect
-const c = document.getElementById("bg");
-const ctx = c.getContext('2d');
-let W, H, P;
-
-function resize(){
-  W = c.width = window.innerWidth;
-  H = c.height = window.innerHeight;
-  P = [...Array(90)].map(() => ({
-    x: Math.random() * W,
-    y: Math.random() * H,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    r: Math.random() * 2
-  }));
-}
-
-window.onresize = resize;
-resize();
-
-(function animate(){
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#00ff9c';
-  P.forEach(o => {
-    o.x += o.vx;
-    o.y += o.vy;
-    if(o.x < 0 || o.x > W) o.vx *= -1;
-    if(o.y < 0 || o.y > H) o.vy *= -1;
-    ctx.beginPath();
-    ctx.arc(o.x, o.y, o.r, 0, 7);
-    ctx.fill();
-  });
-  requestAnimationFrame(animate);
-})();
-</script>
+  document.getElementById("u").onkeydown = e => e.key === 'Enter' && go();
+  </script>
 </body>
 </html>`);
   }
