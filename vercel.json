@@ -1,5 +1,15 @@
 {
-  "redirects": [
-    { "source": "/", "destination": "/api", "permanent": true }
+  "version": 2,
+  "builds": [
+    {
+      "src": "pages/api/proxy.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/proxy",
+      "dest": "/pages/api/proxy.js"
+    }
   ]
 }
