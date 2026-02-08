@@ -100,27 +100,28 @@ button{
 <script>
 function buildURL(raw){
   if(!raw.startsWith('http')) raw='https://'+raw;
-  const e = engine.value;
+  const engine = document.getElementById("engine").value;
 
-  if(e==='basic')
-    return '${BASIC}'+encodeURIComponent(raw);
+  if(engine === 'basic')
+    return \`\${BASIC}\${encodeURIComponent(raw)}\`;
 
   // PUBLIC ULTRAVIOLET
-  if(e==='uv1')
-    return 'https://uv.run/service/'+btoa(raw);
+  if(engine === 'uv1')
+    return 'https://uv.run/service/' + btoa(raw);
 
-  if(e==='uv2')
-    return 'https://ultraviolet.workers.dev/service/'+btoa(raw);
+  if(engine === 'uv2')
+    return 'https://ultraviolet.workers.dev/service/' + btoa(raw);
 
   // PUBLIC BARE‑STYLE PROXIES
-  if(e==='cors1')
-    return 'https://corsproxy.io/?'+encodeURIComponent(raw);
+  if(engine === 'cors1')
+    return 'https://corsproxy.io/?' + encodeURIComponent(raw);
 
-  if(e==='cors2')
-    return 'https://api.allorigins.win/raw?url='+encodeURIComponent(raw);
+  if(engine === 'cors2')
+    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(raw);
 }
 
 function go(){
+  const u = document.getElementById("u");
   if(!u.value.trim()) return;
   location.href = buildURL(u.value.trim());
 }
@@ -129,25 +130,38 @@ function openApp(url){
   location.href = buildURL(url);
 }
 
-u.onkeydown = e => e.key==='Enter' && go();
+document.getElementById("u").onkeydown = e => e.key === 'Enter' && go();
 
 // particles
-const c=bg,ctx=c.getContext('2d');
-let W,H,P;
+const c = document.getElementById("bg");
+const ctx = c.getContext('2d');
+let W, H, P;
+
 function r(){
-  W=c.width=innerWidth;
-  H=c.height=innerHeight;
-  P=[...Array(90)].map(()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*2}));
+  W = c.width = window.innerWidth;
+  H = c.height = window.innerHeight;
+  P = [...Array(90)].map(() => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 2
+  }));
 }
-onresize=r;r();
+window.onresize = r;
+r();
+
 (function a(){
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#00ff9c';
-  P.forEach(o=>{
-    o.x+=o.vx;o.y+=o.vy;
-    if(o.x<0||o.x>W)o.vx*=-1;
-    if(o.y<0||o.y>H)o.vy*=-1;
-    ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,7);ctx.fill();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#00ff9c';
+  P.forEach(o => {
+    o.x += o.vx;
+    o.y += o.vy;
+    if(o.x < 0 || o.x > W) o.vx *= -1;
+    if(o.y < 0 || o.y > H) o.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.r, 0, 7);
+    ctx.fill();
   });
   requestAnimationFrame(a);
 })();
@@ -159,14 +173,15 @@ onresize=r;r();
   // ================= BASIC PROXY =================
   try {
     const r = await fetch(url, {
-      headers:{ "user-agent": req.headers["user-agent"] || "" }
+      headers: { "user-agent": req.headers["user-agent"] || "" }
     });
     let b = await r.text();
     b = b.replace("<head>", `<head><base href="${url}">`);
-    b = b.replace(/(href|src)="https?:\/\/([^"]+)"/g,
-      `$1="${BASIC}https://$2"`);
+    b = b.replace(/(href|src)="https?:\/\/([^"]+)"/g, 
+      (match, p1, p2) => `${p1}="${BASIC}https://${p2}"`);
     res.send(b);
-  } catch {
+  } catch (error) {
+    console.error(error);
     res.status(500).send("Proxy error");
   }
 }
