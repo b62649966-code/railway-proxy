@@ -6,10 +6,10 @@
     "start": "next start" 
   },
   "dependencies": {
-    "node-fetch": "^3.3.1",  // This is the fetch library used to make requests
-    "next": "12.0.0",         // This is the Next.js version for your project
-    "react": "17.0.0",        // React is required by Next.js
-    "react-dom": "17.0.0"     // React DOM is required by Next.js
+    "node-fetch": "^3.3.1", 
+    "next": "12.0.0",         
+    "react": "17.0.0",        
+    "react-dom": "17.0.0"     
   },
   "engines": {
     "node": ">=18"
