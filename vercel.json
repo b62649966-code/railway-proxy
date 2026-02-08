@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "pages/api/index.js",
+      "src": "pages/api/index.js",  # API route for proxy logic
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/proxy",
-      "dest": "/pages/api/index.js"
+      "src": "/api/proxy",           # This maps the `/api/proxy` route
+      "dest": "/pages/api/index.js"  # To the actual `index.js` file in `/api/`
     }
   ]
 }
