@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "pages/api/index.js",
+      "src": "pages/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/proxy",
-      "dest": "/pages/api/index.js"
+      "src": "/api",
+      "dest": "pages/index.js"
     }
   ]
 }
